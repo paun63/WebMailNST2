@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is Metro/2.3.1-b419 (branches/2.3.1.x-7937; 2014-08-04T08:11:03+0000) JAXWS-RI/2.2.10-b140803.1500 JAXWS-API/2.2.11 JAXB-RI/2.2.10-b140802.1033 JAXB-API/2.2.12-b140109.1041 svn-revision#unknown. --><xs:schema xmlns:tns="http://ws/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://ws/">
+
+<xs:element name="azurirajPregledano" type="tns:azurirajPregledano"/>
+
+<xs:element name="azurirajPregledanoResponse" type="tns:azurirajPregledanoResponse"/>
+
+<xs:element name="cuvanjeDrafta" type="tns:cuvanjeDrafta"/>
+
+<xs:element name="cuvanjeDraftaResponse" type="tns:cuvanjeDraftaResponse"/>
+
+<xs:element name="hello" type="tns:hello"/>
+
+<xs:element name="helloResponse" type="tns:helloResponse"/>
+
+<xs:element name="korisnik" type="tns:korisnik"/>
+
+<xs:element name="obrisiPoruku" type="tns:obrisiPoruku"/>
+
+<xs:element name="obrisiPorukuResponse" type="tns:obrisiPorukuResponse"/>
+
+<xs:element name="poruka" type="tns:poruka"/>
+
+<xs:element name="povratakSifre" type="tns:povratakSifre"/>
+
+<xs:element name="povratakSifreResponse" type="tns:povratakSifreResponse"/>
+
+<xs:element name="prijava" type="tns:prijava"/>
+
+<xs:element name="prijavaResponse" type="tns:prijavaResponse"/>
+
+<xs:element name="registracija" type="tns:registracija"/>
+
+<xs:element name="registracijaResponse" type="tns:registracijaResponse"/>
+
+<xs:element name="slanjePoruke" type="tns:slanjePoruke"/>
+
+<xs:element name="slanjePorukeResponse" type="tns:slanjePorukeResponse"/>
+
+<xs:element name="vratiListuKontakata" type="tns:vratiListuKontakata"/>
+
+<xs:element name="vratiListuKontakataResponse" type="tns:vratiListuKontakataResponse"/>
+
+<xs:element name="vratiListuKorisnikID" type="tns:vratiListuKorisnikID"/>
+
+<xs:element name="vratiListuKorisnikIDResponse" type="tns:vratiListuKorisnikIDResponse"/>
+
+<xs:element name="vratiListuPoruka" type="tns:vratiListuPoruka"/>
+
+<xs:element name="vratiListuPorukaResponse" type="tns:vratiListuPorukaResponse"/>
+
+<xs:complexType name="prijava">
+<xs:sequence>
+<xs:element name="korisnik" type="tns:korisnik" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="korisnik">
+<xs:sequence>
+<xs:element name="alt" type="xs:string" minOccurs="0"/>
+<xs:element name="ime" type="xs:string" minOccurs="0"/>
+<xs:element name="korisnikid" type="xs:string" minOccurs="0"/>
+<xs:element name="lozinka" type="xs:string" minOccurs="0"/>
+<xs:element name="prezime" type="xs:string" minOccurs="0"/>
+<xs:element name="tp" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="prijavaResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:korisnik" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="slanjePoruke">
+<xs:sequence>
+<xs:element name="poruka" type="tns:poruka" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="poruka">
+<xs:sequence>
+<xs:element name="datum" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="kategorija" type="xs:string" minOccurs="0"/>
+<xs:element name="porukaid" type="xs:int" minOccurs="0"/>
+<xs:element name="posiljalac" type="tns:korisnik" minOccurs="0"/>
+<xs:element name="pregledana" type="xs:boolean"/>
+<xs:element name="prilog" type="xs:string" minOccurs="0"/>
+<xs:element name="primalac" type="tns:korisnik" minOccurs="0"/>
+<xs:element name="sadrzaj" type="xs:string" minOccurs="0"/>
+<xs:element name="tema" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="slanjePorukeResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="vratiListuKorisnikID">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="vratiListuKorisnikIDResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="azurirajPregledano">
+<xs:sequence>
+<xs:element name="poruka" type="tns:poruka" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="azurirajPregledanoResponse">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="vratiListuPoruka">
+<xs:sequence>
+<xs:element name="korisnik" type="tns:korisnik" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="vratiListuPorukaResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:poruka" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="hello">
+<xs:sequence>
+<xs:element name="name" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="helloResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="cuvanjeDrafta">
+<xs:sequence>
+<xs:element name="poruka" type="tns:poruka" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="cuvanjeDraftaResponse">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="vratiListuKontakata">
+<xs:sequence>
+<xs:element name="korisnik" type="tns:korisnik" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="vratiListuKontakataResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:korisnik" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="registracija">
+<xs:sequence>
+<xs:element name="korisnik" type="tns:korisnik" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="registracijaResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="povratakSifre">
+<xs:sequence>
+<xs:element name="korisnik" type="tns:korisnik" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="povratakSifreResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="obrisiPoruku">
+<xs:sequence>
+<xs:element name="poruka" type="tns:poruka" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="obrisiPorukuResponse">
+<xs:sequence/>
+</xs:complexType>
+</xs:schema>

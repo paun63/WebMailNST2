@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <title>Registracija</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <style>
+            .row
+            {
+                width: 100%;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <b:panelGrid columns="3" col-spans="4,4,4" row-classes="row">
+
+            <b:panel style="visibility: hidden;"></b:panel>
+
+
+            <b:panel>
+                <h3>Pravljenje naloga</h3>
+                <h:form>
+
+
+                    <b:label text="Korisnicko ime"/>    
+
+                    <b:inputText id ="txtUsername" placeholder="username@webmail.com" value="#{mbRegistracija.user}" >
+                        <h:outputText value="#{mbRegistracija.porukaUser}" style="color: red;"/>
+                    </b:inputText>
+
+
+                    <b:label text="Lozinka"/>    
+                    <b:inputSecret id ="txtPassword"  value="#{mbRegistracija.pass}">
+                        <h:outputText value="#{mbRegistracija.porukaPass}" style="color: red;"/>
+                    </b:inputSecret>
+
+                    <b:label text="Ponovni unos lozinke"/>   
+                    <b:inputSecret id ="txtPasswordCheck"  value="#{mbRegistracija.passCheck}" >
+
+                    </b:inputSecret>
+
+                    <b:label text="Ime"/>   
+                    <b:inputText id ="txtIme"  value="#{mbRegistracija.ime}" >
+                        <h:outputText value="#{mbRegistracija.porukaImePrezime}" style="color: red;"/>
+                    </b:inputText>
+
+                    <b:label text="Prezime"/>   
+                    <b:inputText id ="txtPrezime"  value="#{mbRegistracija.prezime}" >
+
+                    </b:inputText>
+
+                    <b:label text="Alternativna e-mail adresa"/>
+                    <b:inputText id ="txtAlt"  value="#{mbRegistracija.alt}">
+                        <h:outputText value="#{mbRegistracija.porukaAlt}" style="color: red;"/>
+                    </b:inputText>
+
+                    <b:label text="Tajno pitanje"/>
+                    <b:inputText id ="txtTP" placeholder="Koji je vas omiljeni sportski klub?" value="#{mbRegistracija.tp}">
+                        <h:outputText value="#{mbRegistracija.porukaTP}" style="color: red;"/>
+                    </b:inputText>
+
+                    <b:commandButton id="btnRegistracija" disabled="#{mbRegistracija.uspesnaRegistracija}" value="Napravi nalog" action="#{mbRegistracija.registracija()}"/>
+
+                    <b:panel look="primary" style="#{mbRegistracija.uspesnaRegistracija==false?'visibility: hidden;':'visibility: visible;'}">
+                        <h4>Registracija uspesna</h4>
+                        <b:navLink href="index.xhtml" value="Povratak na stranu za prijavljivanje"/>
+                    </b:panel>
+
+                </h:form>
+
+
+            </b:panel>
+
+            <b:panel style="visibility: hidden;"></b:panel>
+
+        </b:panelGrid>
+
+
+
+    </h:body>
+</html>

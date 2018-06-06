@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Login</title>
+        <style></style>
+    </h:head>
+    <h:body style="width: 100%; height: 100%">
+        <b:container style="width: 100%; height: 100%">
+            <h2>Elastic search</h2>
+                        <hr/>
+                        <br></br>
+                        <h:form>                          
+                        <b:panelGrid colSpans="6,6">
+                        
+                        <b:column>
+                            <b:panelGrid colSpans="6,6">
+                              <b:column>
+                                  <b:commandButton value="Kreiraj indeks i popuni korisnicima" action="#{mbAgent.kreiranjeIndeksaKorisnika()}"/>   
+                                <br></br>
+                                <hr/>                               
+                                <b:commandButton value="Kreiraj indeks i popuni porukama" action="#{mbAgent.kreiranjeIndeksaSifarnika()}"/>                   
+                              </b:column> 
+                                
+                              <b:column>
+                                <b:commandButton value="Obrisi indeks korisnika" action="#{mbAgent.obrisiIndeksaKorisnika()}"/>   
+                                <br></br>
+                                <hr/>                               
+                                <b:commandButton value="Obrisi indeks poruka" action="#{mbAgent.obrisiIndeksaSifarnika()}" /> 
+                              </b:column> 
+                            </b:panelGrid>  
+                           
+                            <br></br>
+                            
+                            <b:selectOneMenu value="#{mbAgent.vrstaPretrage}" >
+                                        <f:selectItem itemLabel="Korisnici" itemValue="1" />
+                                        <f:selectItem itemLabel="Poruke" itemValue="2" />
+                              </b:selectOneMenu> 
+                              
+                              <b:inputText id ="txtNaziv"  value="#{mbAgent.uslovPretrage}" />
+                              
+                              <b:commandButton id ="myButton" value="Pretraga" action="#{mbAgent.pretragaElastic()}"/>
+                              
+                              <b:inputTextarea placeholder="Rezultat pretrage" value="#{mbAgent.rezultatPretrage}"/>
+                              <h:outputText value="#{mbAgent.greskaPretrage}" style="color: black;"/>
+                            
+                        </b:column>       
+                        </b:panelGrid>
+                        </h:form>
+
+        </b:container>
+        
+    </h:body>
+</html>
+               
+                        

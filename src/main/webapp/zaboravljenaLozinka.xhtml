@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Zaboravljena lozinka</title>
+
+    </h:head>
+    <h:body>
+        <b:container style="width: 100%; height: 100%;">
+
+            <b:panelGrid columns="3">
+                <b:panel style="visibility: hidden;"></b:panel>
+                <b:panel style="margin-top: 30%;">
+                    <h4>Povratak izgubljene lozinke</h4>
+                    <h:form>
+                        <h:outputText value="#{mbPrijava.poruka1}" style="color: red;"/>
+                        <b:inputText id="txtUserZaPass" placeholder="Vas e-mail (user@webmail.com)" value="#{mbPrijava.korisnik}"/>
+                      
+                        <h:outputText value="#{mbPrijava.poruka2}" style="color: red;"/>                   
+                        <b:inputText id="txtTPZaPass" placeholder="Odgovor na tajno pitanje" tooltip="Tajno pitanje: Koji je vas omiljeni sportski klub?" value="#{mbPrijava.odgovorTP}"/>
+                        
+                        <h:outputText value="#{mbPrijava.poruka3}" style="color: red;"/>
+                        <b:inputSecret id="txtPass1" placeholder="Nova lozinka" tooltip="Molimo unesite novu lozinku" value="#{mbPrijava.noviPass}"/>
+                        
+                        <b:inputSecret id="txtPass2" placeholder="Ponovite novu lozinku" tooltip="Molimo ponovite novu lozinku" value="#{mbPrijava.noviPassProvera}"/>
+                        
+                        <b:panelGrid columns="2" col-spans="2,10">  
+
+                            <b:commandButton value="Potvrdi" action="#{mbPrijava.povratakIzgubljeneLozinke()}"/>
+
+                            <b:panel look="info">
+                                <h:outputText value="#{mbPrijava.labelaZaPovratakLozinke}" style="padding-top: 10%;"/>  
+                            </b:panel>
+                           
+                        </b:panelGrid>
+
+                    </h:form>
+                     <h:outputText value="Povratak na stranu za "/><b:navLink href="index.xhtml" value="prijavu"/>
+                </b:panel>
+                
+                <b:panel style="visibility: hidden;"></b:panel>
+            </b:panelGrid>
+            
+        </b:container>
+    </h:body>
+</html>

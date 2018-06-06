@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Login</title>
+        <style></style>
+    </h:head>
+    <h:body>
+        <b:container style="width: 100%; height: 100%;">
+            <b:panelGrid columns="3" col-spans="4,4,4" style="width: 100%;">
+
+                <b:panel style="visibility: hidden;"></b:panel>
+
+                <b:panel style="border: none; box-shadow: none; margin-top: 50%;">
+                    <h:form id="formPrijava" style="margin-left: 20%;margin-right: 20%;">
+                        <h:outputText value="#{mbPrijava.porukaPrijava}" style="color: red;"/>
+                        <b:inputText id ="txtUsername" placeholder="Korisnicko ime" value="#{mbPrijava.korisnik}"/>
+                        <b:inputSecret id="txtPassword" placeholder="Lozinka" value="#{mbPrijava.lozinka}"/>
+                        <b:panelGrid columns="2">
+                            <b:commandButton value="prijava" look="primary" style="width:100%" action="#{mbPrijava.prijaviKorisnika()}"/>
+                            <b:commandButton value="zaboravljena lozinka" look="danger" style="width:100%" action="#{mbPrijava.redirectLozinka()}"/>
+                        </b:panelGrid>
+                        <h:outputText style="padding-left: 18%;" value="Nemate nalog? Registrujte se"/><b:commandButton value="ovde." look="link" style="width:20%;" action="#{mbPrijava.registracija()}"/>
+                    </h:form>     
+                </b:panel>
+
+                <b:panel  style="visibility: hidden;"></b:panel>
+                   
+              
+
+            </b:panelGrid>
+
+           
+                
+           
+        </b:container>
+        <h:outputText style="opacity: 0.2; margin-left: 46%; padding-top: 100%;" value="Webmail silab fon NP"/>
+    </h:body>
+</html>
+
+
+

@@ -1,0 +1,337 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <style>
+            .row{ width: 100%;} 
+            .ikonice{ float: right; }
+            .navKat{width: 100%; border: 1pt black solid} 
+            .kolona{width: 200px;}
+            
+        </style>
+        <title>WebMail agent</title>
+        <!-- <meta http-equiv="refresh" content="5" /> -->
+        <script>
+
+
+            function RefreshTable() {
+                $("#tabela").load("mailAgent.xhtml #tabela");
+            }
+
+            //setInterval(function () {
+            //    $("#tabela").load("mailAgent.xhtml #tabela");
+            //}, 5000);
+
+
+
+        </script>
+
+    </h:head>
+
+    <h:body>
+        <b:navBar id="astl"  brand="WebMail" brandHref="#" onclick="RefreshTable()">
+
+            <h:form class="navbar-form navbar-left hidden-md hidden-sm hidden-xs" role="search" >
+                <div class="form-group">
+                    <b:inputText type="text" class="form-control" value="#{mbAgent.search}" placeholder="Email search"/>
+
+                        
+                    <b:commandButton value="Trazi"/>
+                    <b:commandButton value="Elastic" action="#{mbAgent.elastic()}"/>    
+                   
+                </div>
+            </h:form>
+
+            <h:form class="navbar-form navbar-left hidden-md hidden-sm hidden-xs">
+                <b:button value="Nova" icon="pencil" icon-align="right" p:data-target="#amodal" p:data-toggle="modal" onclick="return false;"></b:button>
+                
+            </h:form>
+            
+
+            
+            <b:navbarLinks pull="right"><b:navLink value="    " href="#"></b:navLink></b:navbarLinks>
+            <b:navbarLinks pull="right">
+                <b:navLink value="Dobrodosli #{mbAgent.ime}" disabled="true"></b:navLink>
+                <b:dropMenu value="Podesavanja" icon="cog">
+                    <b:dropMenu value="Promeni temu">
+                        <h:form>
+                            <b:commandButton look="link" value="defalut" action="#{mbAgent.setStilTema('default')}"/>
+                            <b:commandButton look="link" value="spacelab" action="#{mbAgent.setStilTema('spacelab')}"/>  
+                            <b:commandButton look="link" value="simplex" action="#{mbAgent.setStilTema('simplex')}"/>  
+                            <b:commandButton look="link" value="yeti" action="#{mbAgent.setStilTema('yeti')}"/>  
+                        </h:form>
+                    </b:dropMenu>
+                    <h:form>
+                        <b:commandButton icon="log-out" style="" value="Logout" look="link" action="#{mbAgent.logout()}" onmouseover="this.style.textDecoration = 'none';"/>
+                    </h:form>
+                </b:dropMenu>
+            </b:navbarLinks>
+
+        </b:navBar>
+
+
+        <b:panelGrid id="pg" columns="3" col-spans="1,10,1" row-classes="row" style="margin-bottom: 0pt;">
+
+            <b:panel look="default" title="Folders" >
+
+                <h:form> 
+
+
+
+                    <b:commandButton class="navKat" id="Inbox" look="text" value="Inbox" style="#{mbAgent.kat.equals('inbox')?'background-color: #d9d9d9;':''}">
+                        <f:setPropertyActionListener target="#{mbAgent.kat}" value="inbox" />
+
+                    </b:commandButton>   <b:badge value="#{mbAgent.br}" style="z-index: 10; position: absolute;"/>
+
+                    <b:commandButton class="navKat" id="Junk" look="text" value="Junk" style="#{mbAgent.kat.equals('junk')?'background-color: #d9d9d9;':''}">
+                        <f:setPropertyActionListener target="#{mbAgent.kat}" value="junk" />
+
+                    </b:commandButton>
+
+                    <b:commandButton class="navKat" id="Drafts" look="text" value="Drafts" style="#{mbAgent.kat.equals('drafts')?'background-color: #d9d9d9;':''}">
+                        <f:setPropertyActionListener target="#{mbAgent.kat}" value="drafts" />
+
+                    </b:commandButton>
+
+                    <b:commandButton class="navKat" id="Sent" look="text" value="Sent" style="#{mbAgent.kat.equals('sent')?'background-color: #d9d9d9;':''}">
+                        <f:setPropertyActionListener target="#{mbAgent.kat}" value="sent" />
+
+                    </b:commandButton>
+
+
+
+
+                </h:form>
+            </b:panel>
+
+            <h:panelGroup layout="block" id="test" >
+                <b:panel id="messages" >
+
+                    <h:panelGroup id="wrapperPanel">
+                        <h:panelGroup id="tableRenderPanel" rendered="#{mbAgent.render}">
+                            <h3 style="margin-left: 5%;">Pregled poruka</h3>
+                            <b:panelGrid columns="1">
+                                <h:form>
+                                    <b:commandButton icon="arrow-left" value="" action="#{mbAgent.setRender(false)}"/>
+
+                                    <b:panelGrid columns="2" col-spans="1,11" style="margin-left: 5%; padding-bottom: 3%;">
+
+
+                                        <b:label text="Od:"/><h:outputText value="#{mbAgent.prikazPosiljalac}@webmail.com"/>
+                                        <b:label text="Za:" /><h:outputText value="#{mbAgent.prikazPrimalac}@webmail.com"/>
+                                        <b:label text="Tema:"/><h:outputText value="#{mbAgent.prikazTema}"/>
+                                        <b:label text="Poslata:"/><h:outputText value="#{mbAgent.prikazDatum.day}/#{mbAgent.prikazDatum.month}/#{mbAgent.prikazDatum.year} #{mbAgent.prikazDatum.hour}:#{mbAgent.prikazDatum.minute}:#{mbAgent.prikazDatum.second}"/>
+
+                                    </b:panelGrid>
+                                    <b:inputTextarea readonly="true" placeholder="Message" span="12" rows="12" id="txtMessage" style="resize: none" value ="#{mbAgent.prikazSadrzaj}"/>
+                                    <b:commandButton value="Obrisi" look="danger" style="float: right" action="#{mbAgent.obrisiPoruku()}" /> 
+                                    <b:commandButton value="Preuzmi prilog" icon="save" style="#{mbAgent.prikazPrilog==null?'visibility: hidden;':''}" action="#{mbAgent.download()}"/>
+                                    <b:commandButton value="Odgovori" action="#{mbAgent.setRenderReply(false)}" style="#{!mbAgent.kat.equals('inbox')?'visibility: hidden;':''}}" p:data-target="#amodal" p:data-toggle="modal" oncomplete="return false;"/>
+                                    <b:commandButton value="Posalji" style="#{!mbAgent.kat.equals('drafts')?'visibility: hidden;':''}}" action="#{mbAgent.setRenderReply(false)}">
+                                        <f:actionListener binding="#{mbAgent.posaljiDraft()}"/>
+                                    </b:commandButton>
+                                </h:form>
+                            </b:panelGrid>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{!mbAgent.render}">
+                        <table id="tabela" class="table table-hover" style="background-color: #fff; margin-bottom: 0pt;">
+
+                            <thead>
+                                <tr>
+                                    <td class="kolona"><h:outputText value="Od:" /> </td>
+                                    <td class="kolona"><h:outputText value="Tema:" /> </td>
+                                    <td class="kolona"><h:outputText value="Prilog:"/></td>
+                                    <td class="kolona"><h:outputText value="Datum:"/> </td>
+                                    
+                                    <td class="kolona">
+                                        <h:form style="margin-left: 90%"> 
+                                        <b:commandButton icon="refresh" action="#{mbAgent.osveziTabelu()}" size="xs" value="" oncomplete="RefreshTable()"/>
+                                    </h:form>
+                                    </td>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                <ui:repeat var="item" value="#{mbAgent.porukePoStranici}">
+
+
+                                    <tr onmouseover="this.style.cursor = 'pointer'" 
+                                        style="#{item.pregledana==false and (item.kategorija=='sent' or item.kategorija=='junk') and item.primalac.korisnikid == mbAgent.korisnik? 'font-weight:bold; background-color:#d9d9d9;' : 'font-weight:normal'}">
+                                        <td>
+                                            <h:outputText value="#{item.posiljalac.ime} #{item.posiljalac.prezime}"> </h:outputText>
+                                        </td>
+
+                                        <td>
+                                            <h:outputText value="#{item.tema}"></h:outputText>
+                                        </td>
+
+                                        <td>
+                                            <h:form >
+                                                <b:icon name="#{item.prilog==null?'':'paperclip'}">
+                                                    #{mbAgent.vratiImeIzPriloga(item.prilog)}
+                                                </b:icon>
+                                            </h:form>
+                                        </td> 
+
+                                        <td>
+                                            <h:outputText value="#{item.datum.day}/#{item.datum.month}/#{item.datum.year}"></h:outputText>
+                                        </td>
+
+                                        <td>
+                                            <h:form>
+                                                <b:commandButton style="height: 18px;" look="text" size='xs' value="Otvori poruku" action="#{mbAgent.setItem(item)}"/>
+
+                                            </h:form>
+                                        </td>
+
+                                    </tr>       
+
+                                </ui:repeat>
+                            </tbody>     
+                        </table>
+                    </h:panelGroup>    
+
+
+
+                </b:panel>
+            </h:panelGroup>
+            <b:panel style="visibility: hidden;"></b:panel>
+
+        </b:panelGrid>
+
+        <b:modal id="amodal" title="Nova Poruka" styleClass="modalPseudoClass">
+            <h:form>
+                <b:panelGrid columns="2">
+
+                    <b:label text="From:"/>
+                    <b:label text="To:"/>
+
+                    <b:inputText span="12" id="txtKorisnik" disabled="true" value="#{mbAgent.from}" />
+
+                    <b:inputText span="12" id="txtPrimalac" value ="#{mbAgent.to}" tooltip="Primer vise primalaca: (user@webmail.com;user2@webmail.com)">
+                        <f:ajax event="keyup" listener="#{mbAgent.kontaktAutoComplete}" render="livesearch"/>
+                    </b:inputText>
+
+                    <b:panelGrid columns="1" style="visibility: hidden;"></b:panelGrid>
+
+
+                    <b:panelGrid columns="1" id="livesearch"  style="z-index: 10; position: absolute;">
+                        <b:panel id="lsResultList" rendered="#{! empty mbAgent.pretragaKontakt}" style="width: 100%">  
+
+                            <ui:repeat var="item" value="#{mbAgent.pretragaKontakt}">
+
+                                <b:commandButton look="text" id="labRend" value="#{item.ime} #{item.prezime} #{item.korisnikid}@webmail.com" style="width: 100%" onmouseover="this.style.textDecoration = 'underline';" onmouseout="this.style.textDecoration = 'none';">
+                                    <f:ajax listener="#{mbAgent.postaviOdabraniKontakt(item.korisnikid)}"/>                                   
+                                </b:commandButton>
+
+                            </ui:repeat>
+
+                        </b:panel>
+                    </b:panelGrid>
+
+
+                </b:panelGrid>
+
+                <b:panelGrid columns="1">
+
+                    <b:inputText placeholder="Subject" id="txtSubject" span="12" value ="#{mbAgent.subject}"/>
+
+
+
+                    <b:inputTextarea placeholder="Message" span="12" rows="12" id="txtMessage" style="resize: none" value ="#{mbAgent.message}"/>
+                    <b:panelGrid columns="2" style="padding-left: 5%"> 
+                        <b:commandButton id="sacuvaj" value="Sacuvaj" look="default" action="#{mbAgent.sacuvajDraft()}" disabled="#{empty mbAgent.to?'true':'false'}"/>
+                        <b:commandButton id="posalji" value="Posalji" look="primary" style="float: right" action="#{mbAgent.posaljiPoruku()}" disabled="#{empty mbAgent.to?'true':'false'}"/>  
+                    </b:panelGrid>
+                </b:panelGrid>
+
+            </h:form>
+            <f:facet name="footer">
+                <h:form enctype="multipart/form-data">
+                    <h:inputFile  value="#{mbAgent.file}">
+                        <f:ajax listener="#{mbAgent.save()}" />
+                    </h:inputFile>
+                </h:form>    
+            </f:facet>
+        </b:modal>
+
+
+
+
+
+
+
+        <b:modal id="bmodal" title="Pregled poruke" styleClass="modalPseudoClass">
+            <h:form>
+                <b:panelGrid columns="2">
+
+                    <b:label text="Od:"/>
+                    <b:label text="Primalac:"/>
+
+                    <b:inputText span="10" id="txtKorisnik" disabled="true" value="#{mbAgent.prikazPosiljalac}" />
+                    <b:inputText span="12" id="txtPrimalac" value ="#{mbAgent.prikazPrimalac}"/>
+
+                </b:panelGrid>
+
+                <b:panelGrid columns="1">
+                    <b:column>
+                        <b:row>
+                            <b:inputText  id="txtSubject" span="12" value ="#{mbAgent.prikazTema}"/>
+                        </b:row>
+
+                        <b:row>
+                            <b:inputTextarea placeholder="Message" span="12" rows="12" id="txtMessage" style="resize: none" value ="#{mbAgent.prikazSadrzaj}"/>
+                        </b:row>
+                        <b:row>
+                            <b:button value="Odgovori" p:data-target="#amodal" p:data-toggle="modal" onclick="return false;" />
+                            <b:commandButton value="Obrisi" look="primary" style="float: right" action="#{mbAgent.obrisiPoruku()}" />  
+                        </b:row>
+                    </b:column>
+                </b:panelGrid>
+
+            </h:form>
+            <f:facet name="footer">
+                <h:form>
+                    <b:commandButton value="Preuzmi prilog" action="#{mbAgent.download()}"/>
+                </h:form>
+            </f:facet>
+        </b:modal>
+
+
+
+
+
+        <b:panelGrid columns="1" id="footer" row-classes="row" style="width: 100%; position: fixed;" rendered="#{!mbAgent.render}">
+            <b:container>
+                <b:row>
+                    <h:form>
+                        <h:outputText value="Ukupno poruka: #{mbAgent.ukupnoPorukaPoKategoriji}"/>
+
+
+                        <b:commandButton size="xs" class="ikonice" value="" action="#{mbAgent.pomerajFK()}" icon="step-forward"/>
+                        <b:commandButton size="xs" class="ikonice" value="" action="#{mbAgent.pomerajF}" icon="chevron-right"/>
+
+
+                        <b:commandButton size="xs" class="ikonice" value="" action="#{mbAgent.pomerajB}" icon="chevron-left"/>
+                        <b:commandButton size="xs" class="ikonice" value="" action="#{mbAgent.pomerajBK()}" icon="step-backward"/>    
+
+                        <h:outputText  style="padding-left: 2%;" value="Poruke od #{mbAgent.porukeOd+1}"/>
+                        <h:outputText  value=" do #{mbAgent.porukeDo+1}"/>
+
+                    </h:form>
+                </b:row>
+            </b:container>
+        </b:panelGrid>
+
+    </h:body>
+</html>
+
