@@ -7,11 +7,12 @@ package jsf.mb;
 
 import java.io.Serializable;
 import javax.inject.Named;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Scope;
+import javax.servlet.http.HttpSession;
 import ws.Korisnik;
 import ws.Wst;
 
@@ -20,14 +21,14 @@ import ws.Wst;
  * @author P
  */
 @Named(value = "mbPrijava")
-@SessionScoped
+@javax.enterprise.context.RequestScoped
 public class MBPrijava implements Serializable {
 
     
     Wst ws;
     String korisnik;
     String lozinka;
-    static Korisnik k1;
+    Korisnik k1;
     
     String porukaPrijava;
     
@@ -51,7 +52,7 @@ public class MBPrijava implements Serializable {
         ws = new Wst();
     }
 
-    public String prijaviKorisnika() {
+    public String prijaviKorisnikaDepr() {
         porukaPrijava = "";
         if(korisnik.isEmpty() || lozinka.isEmpty())
         {
@@ -71,6 +72,46 @@ public class MBPrijava implements Serializable {
        
         return "mailAgent.xhtml";
     }
+    public String prijaviKorisnika() {
+        boolean valid = false;
+        Korisnik k = new Korisnik();
+        validacijaUsera();
+        k.setKorisnikid(korisnik);
+        k.setLozinka(lozinka);
+        k = ws.getWebServiceTestPort().prijava(k);
+        
+        if (k != null)
+        {
+           valid = true; 
+        }
+        
+	if (valid) 
+        {            
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+            session.setAttribute("id", k.getKorisnikid());
+            session.setAttribute("ime", k.getIme());
+            session.setAttribute("prezime", k.getPrezime());
+            session.setAttribute("tp", k.getTp());
+            session.setAttribute("alt", k.getAlt());
+            
+            return "mailAgent.xhtml";
+	} 
+        else 
+        {
+            porukaPrijava = "Pogresan e-mail ili lozinka";
+	    return "index.xhtml";		
+	}
+    }
+	
+    public String logout() 
+    {
+	FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+	session.invalidate();
+	return "index.xhtml";
+    }
+
     
     public void povratakIzgubljeneLozinke()
     {    

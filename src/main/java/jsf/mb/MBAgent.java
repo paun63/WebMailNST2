@@ -34,8 +34,9 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.inject.Named;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.context.SessionScoped;
+
 import javax.faces.application.ViewHandler;
+import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIViewRoot;
 import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.ExternalContext;
@@ -44,6 +45,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -57,8 +59,11 @@ import ws.Wst;
  * @author P
  */
 @Named(value = "mbAgent")
-@SessionScoped
+@javax.enterprise.context.SessionScoped
 public class MBAgent implements Serializable{
+    
+     Korisnik k1;
+    
      Wst ws;
      List<Poruka> lista = new ArrayList();
      List<Korisnik> kontakti = new ArrayList();
@@ -70,14 +75,14 @@ public class MBAgent implements Serializable{
      int porukeOd = 0;
      int porukeDo = 19;
      
-     String korisnik = MBPrijava.k1.getKorisnikid();
-     String from = MBPrijava.k1.getKorisnikid()+"@webmail.com";
+     String korisnik;
+     String from;
      String to;
      String pomocniTo;
      String subject;
      String message;
      String attachment="";
-     String ime = MBPrijava.k1.getIme();
+     String ime;
      Boolean uspesnostSlanja = null;
      
      int UkupnoPorukaPoKategoriji = 0;
@@ -113,7 +118,23 @@ public class MBAgent implements Serializable{
      * Creates a new instance of MBAgent
      */
     public MBAgent() {
+        
         ws = new Wst();
+        
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        
+        this.k1 = new Korisnik();
+        k1.setKorisnikid(session.getAttribute("id").toString());
+        k1.setIme(session.getAttribute("ime").toString());
+        k1.setPrezime(session.getAttribute("prezime").toString());      
+        k1.setAlt(session.getAttribute("alt").toString());
+        k1.setTp(session.getAttribute("tp").toString());
+        
+        this.korisnik = k1.getKorisnikid();
+        this.from = k1.getKorisnikid()+"@webmail.com";
+        this.ime = k1.getIme();
+        
         uzmiListuPoruka();
         vratiPorukeZaKI();
         neprocitaneZaBedz();
@@ -143,13 +164,13 @@ public class MBAgent implements Serializable{
     public void uzmiListuPoruka()
     {
         
-       lista = ws.getWebServiceTestPort().vratiListuPoruka(MBPrijava.k1);
+       lista = ws.getWebServiceTestPort().vratiListuPoruka(k1);
       
     }
     
     private void vratiListuKontakata() {
         
-       kontakti = ws.getWebServiceTestPort().vratiListuKontakata(MBPrijava.k1);
+       kontakti = ws.getWebServiceTestPort().vratiListuKontakata(k1);
       
        
     }
@@ -216,7 +237,7 @@ public class MBAgent implements Serializable{
                  Korisnik primalac = new Korisnik();
                  primalac.setKorisnikid(s[i]);
                  Poruka p = new Poruka();
-                 p.setPosiljalac(MBPrijava.k1);
+                 p.setPosiljalac(k1);
                  p.setPrimalac(primalac);
                  p.setTema(subject.trim());
                  p.setSadrzaj(message);
@@ -234,7 +255,7 @@ public class MBAgent implements Serializable{
         Korisnik primalac = new Korisnik();
         primalac.setKorisnikid(to);
         Poruka p = new Poruka();
-        p.setPosiljalac(MBPrijava.k1);
+        p.setPosiljalac(k1);
         p.setPrimalac(primalac);
         p.setTema(subject.trim());
         p.setSadrzaj(message);
@@ -258,7 +279,7 @@ public class MBAgent implements Serializable{
         Korisnik primalac = new Korisnik();
         primalac.setKorisnikid(to.substring(0, to.indexOf("@")));
         Poruka p = new Poruka();
-        p.setPosiljalac(MBPrijava.k1);
+        p.setPosiljalac(k1);
         p.setPrimalac(primalac);
         p.setTema(subject.trim());
         p.setSadrzaj(message);
@@ -659,7 +680,7 @@ public class MBAgent implements Serializable{
 
     public void setStilTema(String stilTema) {
         this.stilTema = stilTema;
-        MBPrijava.tema = this.stilTema;
+        //MBPrijava.tema = this.stilTema;
         //Sacuvati u bazi korisnikovu zeljenu temu
     }
     
@@ -725,7 +746,7 @@ public class MBAgent implements Serializable{
         
         
         for (Poruka poruka : lista) {
-            if(poruka.getPrimalac().getKorisnikid().equals(MBPrijava.k1.getKorisnikid()))
+            if(poruka.getPrimalac().getKorisnikid().equals(k1.getKorisnikid()))
             {
                 poruke.add(poruka);
                
@@ -752,7 +773,7 @@ public class MBAgent implements Serializable{
 
     private void vratiZaDrafts() {
         for (Poruka poruka : lista) {
-            if(poruka.getKategorija().equals("drafts") && poruka.getPosiljalac().getKorisnikid().equals(MBPrijava.k1.getKorisnikid()))
+            if(poruka.getKategorija().equals("drafts") && poruka.getPosiljalac().getKorisnikid().equals(k1.getKorisnikid()))
             {
                 poruke.add(poruka);
             }
@@ -765,7 +786,7 @@ public class MBAgent implements Serializable{
 
     private void vratiZaSent() {
         for (Poruka poruka : lista) {
-            if(poruka.getPosiljalac().getKorisnikid().equals(MBPrijava.k1.getKorisnikid())&&!poruka.getKategorija().equals("drafts"))
+            if(poruka.getPosiljalac().getKorisnikid().equals(k1.getKorisnikid())&&!poruka.getKategorija().equals("drafts"))
             {
                 poruke.add(poruka);
             }

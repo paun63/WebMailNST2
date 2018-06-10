@@ -7,7 +7,8 @@ package jsf.mb;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.inject.Named;
 
 import ws.Korisnik;
@@ -18,7 +19,7 @@ import ws.Wst;
  * @author P
  */
 @Named(value = "mbRegistracija")
-@SessionScoped
+@javax.enterprise.context.RequestScoped
 public class MBRegistracija implements Serializable {
 
     Wst ws;
